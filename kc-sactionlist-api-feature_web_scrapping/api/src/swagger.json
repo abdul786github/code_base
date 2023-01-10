@@ -1,0 +1,226 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "1.0.0",
+    "title": "Sanctions List",
+    "description": "User Sanction Validation Application API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Development Server"
+    },
+    {
+      "url": "http://13.235.179.40:5000/api",
+      "description": "Staging Server"
+    }
+  ],
+  "schemas": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Authorization": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["User Authentication"],
+        "summary": "This API for authenticate user by typing username and password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/loginRequest"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Login Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/successLogin"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User Not Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/user/validate": {
+      "get": {
+        "tags": ["Validate Sanction List Data"],
+        "summary": "This API for checking the user is valid or not",
+        "security": [{ "Authorization": [] }],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "description": "User email",
+            "type": "string"
+          },
+          {
+            "name": "nationality",
+            "in": "query",
+            "required": false,
+            "description": "User nationality",
+            "type": "string"
+          },
+          {
+            "name": "passport_no",
+            "in": "query",
+            "required": false,
+            "description": "User passport number",
+            "type": "string"
+          },
+          {
+            "name": "drivers_license_no",
+            "in": "query",
+            "required": false,
+            "description": "User drivers license number",
+            "type": "string"
+          },
+          {
+            "name": "national_identification_no",
+            "in": "query",
+            "required": false,
+            "description": "User national identification number",
+            "type": "string"
+          },
+          {
+            "name": "aadhar_no",
+            "in": "query",
+            "required": false,
+            "description": "User aadhar number",
+            "type": "string"
+          },
+          {
+            "name": "pan_no",
+            "in": "query",
+            "required": false,
+            "description": "User pan number",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "description": "User name or alias name",
+            "type": "string"
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "required": false,
+            "description": "User gender",
+            "type": "string"
+          },
+          {
+            "name": "dob",
+            "in": "query",
+            "required": false,
+            "description": "User date of birth",
+            "type": "string"
+          },
+          {
+            "name": "pob",
+            "in": "query",
+            "required": false,
+            "description": "User place of birth",
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "required": false,
+            "description": "User address",
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/userValidation"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "loginRequest": {
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "successLogin": {
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "accessToken": {
+          "type": "string"
+        }
+      }
+    },
+    "userValidation": {
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "amlMatchScore": {
+          "type": "integer"
+        },
+        "matchedParams": [
+          {
+            "parameter": {
+              "value": "string",
+              "match": "integer"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
